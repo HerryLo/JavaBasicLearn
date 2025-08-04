@@ -3,16 +3,37 @@ package com.liuheng.ui;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Objects;
 import java.util.Random;
 
-public class GameJFrame extends JFrame implements KeyListener {
+public class GameJFrame extends JFrame implements KeyListener, ActionListener {
     int[][] datas = new int[4][4];
 
     // 空白方块
     int x = 0;
     int y = 0;
+
+    // 图片地址
+    String path = "puzzlegame\\image\\animal\\animal3\\";
+
+    int[][] wins = {
+            {1,2,3,4},
+            {5,6,7,8},
+            {9,10,11,12},
+            {13,14,15,0},
+    };
+
+    // 步数统计
+    int step = 0;
+
+    JMenuItem replayJMenuItem = new JMenuItem("重新游戏");
+    JMenuItem reloginJMenuItem = new JMenuItem("重新登录");
+    JMenuItem closeJMenuItem = new JMenuItem("关闭游戏");
+    JMenuItem accountJMenuItem = new JMenuItem("公众号");
 
     public GameJFrame() throws HeadlessException {
         initJFrame();
@@ -39,22 +60,32 @@ public class GameJFrame extends JFrame implements KeyListener {
 
         for (int i = 0; i < tempArr.length; i++) {
             if(tempArr[i] == 0) {
-                x = i/4;
-                y = i%4;
-            }else {
-                datas[i/4][i%4] = tempArr[i];
+                x = i / 4;
+                y = i % 4;
             }
-
+            datas[i/4][i%4] = tempArr[i];
         }
     }
 
     private void initImage() {
         this.getContentPane().removeAll();
 
+        if(checkWin()) {
+            ImageIcon img = new ImageIcon("puzzlegame/image/win.png");
+            JLabel Jlable = new JLabel(img);
+            Jlable.setBounds(203, 283, 197, 73);
+
+            this.getContentPane().add(Jlable);
+        }
+
+        JLabel Jlablestep = new JLabel("步数："+step);
+        Jlablestep.setBounds(50, 30, 100, 20);
+        this.getContentPane().add(Jlablestep);
+
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 int number = datas[i][j];
-                ImageIcon img = new ImageIcon("puzzlegame\\image\\animal\\animal3\\"+number+".jpg");
+                ImageIcon img = new ImageIcon(path+number+".jpg");
                 JLabel Jlable = new JLabel(img);
                 Jlable.setBounds(j*105+83, i*105+134, 105, 105);
                 Jlable.setBorder(new BevelBorder(1));
@@ -91,16 +122,16 @@ public class GameJFrame extends JFrame implements KeyListener {
         JMenu functionJMenu = new JMenu("功能");
         JMenu aboutJMenu = new JMenu("关于");
 
-        JMenuItem replayJMenuItem = new JMenuItem("重新游戏");
-        JMenuItem reloginJMenuItem = new JMenuItem("重新登录");
-        JMenuItem closeJMenuItem = new JMenuItem("关闭游戏");
-        JMenuItem accountJMenuItem = new JMenuItem("公众号");
-
         functionJMenu.add(replayJMenuItem);
         functionJMenu.add(reloginJMenuItem);
         functionJMenu.add(closeJMenuItem);
 
         aboutJMenu.add(accountJMenuItem);
+
+        replayJMenuItem.addActionListener(this);
+        reloginJMenuItem.addActionListener(this);
+        closeJMenuItem.addActionListener(this);
+        accountJMenuItem.addActionListener(this);
 
         JMenuBar.add(functionJMenu);
         JMenuBar.add(aboutJMenu);
@@ -108,20 +139,53 @@ public class GameJFrame extends JFrame implements KeyListener {
         this.setJMenuBar(JMenuBar);
     }
 
+    private boolean checkWin() {
+        for (int i = 0; i < datas.length; i++) {
+            for (int j = 0; j < datas[i].length; j++) {
+                if(datas[i][j] != wins[i][j]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
 
     }
 
+    // 长按不松
     @Override
     public void keyPressed(KeyEvent e) {
+        int code = e.getKeyCode();
+        //System.out.println(code);
+        if(code == 65) {
+            // 键盘A展示全图
+            this.getContentPane().removeAll();
 
+            ImageIcon img = new ImageIcon(path+"all.jpg");
+            JLabel Jlable = new JLabel(img);
+            Jlable.setBounds(83, 134, 420, 420);
+            this.getContentPane().add(Jlable);
+
+            JLabel Jlable1 = new JLabel(new ImageIcon("puzzlegame\\image\\background.png"));
+            Jlable1.setBounds(40, 40, 508, 560);
+            this.getContentPane().add(Jlable1);
+
+            this.getContentPane().repaint();
+        }
     }
 
+    // 按下
     @Override
     public void keyReleased(KeyEvent e) {
+        if(checkWin()) {
+            return;
+        }
+
         int code = e.getKeyCode();
-        System.out.print(code);
+        //System.out.println(code);
         if(code == 38) {
             if(x == 3) {
                 return;
@@ -129,8 +193,9 @@ public class GameJFrame extends JFrame implements KeyListener {
             // 向上按键
             datas[x][y] = datas[x+1][y];
             datas[x+1][y] = 0;
-            initImage();
             x++;
+            step++;
+            initImage();
         }else if(code == 40) {
             if(x == 0) {
                 return;
@@ -138,8 +203,9 @@ public class GameJFrame extends JFrame implements KeyListener {
             // 向下按键
             datas[x][y] = datas[x-1][y];
             datas[x-1][y] = 0;
-            initImage();
             x--;
+            step++;
+            initImage();
         }else if(code == 37) {
             if(y == 3) {
                 return;
@@ -147,8 +213,9 @@ public class GameJFrame extends JFrame implements KeyListener {
             // 向左按键
             datas[x][y] = datas[x][y+1];
             datas[x][y+1] = 0;
-            initImage();
             y++;
+            step++;
+            initImage();
         }else if(code == 39) {
             if(y == 0) {
                 return;
@@ -156,8 +223,49 @@ public class GameJFrame extends JFrame implements KeyListener {
             // 向右按键
             datas[x][y] = datas[x][y-1];
             datas[x][y-1] = 0;
-            initImage();
             y--;
+            step++;
+            initImage();
+        }else if(code == 65) {
+            initImage();
+        }else if(code == 87){
+            datas = new int[][]{
+                    {1,2,3,4},
+                    {5,6,7,8},
+                    {9,10,11,12},
+                    {13,14,15,0},
+            };
+            initImage();
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object obj = e.getSource();
+        if(obj == replayJMenuItem){
+            System.out.println("重新游戏");
+
+            step = 0;
+            intDatas();
+            initImage();
+        }else if(obj == reloginJMenuItem) {
+            System.out.println("重新登录");
+            this.setVisible(false);
+            new LoginFrame();
+        }else if(obj == closeJMenuItem){
+            System.out.println("关闭游戏");
+            System.exit(0);
+        }else if(obj == accountJMenuItem){
+            System.out.println("公众号");
+            JDialog JDialog = new JDialog();
+            JLabel JLabel = new JLabel(new ImageIcon("puzzlegame/image/about.png"));
+            JLabel.setBounds(0,0, 258,258);
+            JDialog.getContentPane().add(JLabel);
+            JDialog.setSize(344,344);
+            JDialog.setAlwaysOnTop(true);
+            JDialog.setLocationRelativeTo(null);
+            JDialog.setModal(true);
+            JDialog.setVisible(true);
         }
     }
 }
