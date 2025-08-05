@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Objects;
 import java.util.Random;
+import java.util.StringJoiner;
 
 public class GameJFrame extends JFrame implements KeyListener, ActionListener {
     int[][] datas = new int[4][4];
@@ -34,6 +35,13 @@ public class GameJFrame extends JFrame implements KeyListener, ActionListener {
     JMenuItem reloginJMenuItem = new JMenuItem("重新登录");
     JMenuItem closeJMenuItem = new JMenuItem("关闭游戏");
     JMenuItem accountJMenuItem = new JMenuItem("公众号");
+    JMenuItem beautyJMenuItem = new JMenuItem("美女");
+    JMenuItem animalJMenuItem = new JMenuItem("动物");
+    JMenuItem sportJMenuItem = new JMenuItem("运动");
+
+    final String AnimalType = "animal";
+    final String GirlType = "girl";
+    final String SportType = "sport";
 
     public GameJFrame() throws HeadlessException {
         initJFrame();
@@ -121,10 +129,16 @@ public class GameJFrame extends JFrame implements KeyListener, ActionListener {
         JMenuBar JMenuBar = new JMenuBar();
         JMenu functionJMenu = new JMenu("功能");
         JMenu aboutJMenu = new JMenu("关于");
+        JMenu changeJMenu = new JMenu("更换图片");
+
+        changeJMenu.add(beautyJMenuItem);
+        changeJMenu.add(animalJMenuItem);
+        changeJMenu.add(sportJMenuItem);
 
         functionJMenu.add(replayJMenuItem);
         functionJMenu.add(reloginJMenuItem);
         functionJMenu.add(closeJMenuItem);
+        functionJMenu.add(changeJMenu);
 
         aboutJMenu.add(accountJMenuItem);
 
@@ -132,6 +146,9 @@ public class GameJFrame extends JFrame implements KeyListener, ActionListener {
         reloginJMenuItem.addActionListener(this);
         closeJMenuItem.addActionListener(this);
         accountJMenuItem.addActionListener(this);
+        beautyJMenuItem.addActionListener(this);
+        animalJMenuItem.addActionListener(this);
+        sportJMenuItem.addActionListener(this);
 
         JMenuBar.add(functionJMenu);
         JMenuBar.add(aboutJMenu);
@@ -158,6 +175,10 @@ public class GameJFrame extends JFrame implements KeyListener, ActionListener {
     // 长按不松
     @Override
     public void keyPressed(KeyEvent e) {
+        if(checkWin()) {
+            return;
+        }
+
         int code = e.getKeyCode();
         //System.out.println(code);
         if(code == 65) {
@@ -244,10 +265,7 @@ public class GameJFrame extends JFrame implements KeyListener, ActionListener {
         Object obj = e.getSource();
         if(obj == replayJMenuItem){
             System.out.println("重新游戏");
-
-            step = 0;
-            intDatas();
-            initImage();
+            reset();
         }else if(obj == reloginJMenuItem) {
             System.out.println("重新登录");
             this.setVisible(false);
@@ -266,6 +284,39 @@ public class GameJFrame extends JFrame implements KeyListener, ActionListener {
             JDialog.setLocationRelativeTo(null);
             JDialog.setModal(true);
             JDialog.setVisible(true);
+        }else if(obj == beautyJMenuItem){
+            int index = randomIndex(GirlType);
+            path = "puzzlegame\\image\\"+GirlType+"\\"+GirlType+index+"\\";
+            reset();
+        }else if(obj == animalJMenuItem) {
+            int index = randomIndex(AnimalType);
+            path = "puzzlegame\\image\\"+AnimalType+"\\"+AnimalType+index+"\\";
+            reset();
+        }else if(obj == sportJMenuItem) {
+            int index = randomIndex(SportType);
+            path = "puzzlegame\\image\\"+SportType+"\\"+SportType+index+"\\";
+            reset();
         }
+    }
+
+    private int randomIndex(String type) {
+        Random ra = new Random();
+        if(type == AnimalType){
+            int index = ra.nextInt(8)+1;
+            return index;
+        } else if (type == GirlType) {
+            int index = ra.nextInt(12)+1;
+            return index;
+        } else if(type == SportType) {
+            int index = ra.nextInt(9)+1;
+            return index;
+        }
+        return 1;
+    }
+
+    private void reset() {
+        step = 0;
+        intDatas();
+        initImage();
     }
 }
