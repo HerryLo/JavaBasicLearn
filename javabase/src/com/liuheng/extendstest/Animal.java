@@ -4,6 +4,8 @@ public class Animal {
     private int age;
     private String color;
 
+    public int num = 10;
+
     public Animal() {
     }
 

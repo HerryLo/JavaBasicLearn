@@ -9,6 +9,9 @@ public class Test01 {
 
         p1.keppPet(a1,"骨头");
         p1.keppPet(a2,"鱼干");
+
+        System.out.println(a1.num);
+        System.out.println(((Dog) a1).num);
     }
 
 

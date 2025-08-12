@@ -1,6 +1,9 @@
 package com.liuheng.extendstest;
 
 public class Dog extends Animal{
+
+    public int num = 30;
+
     public Dog() {
     }
 
