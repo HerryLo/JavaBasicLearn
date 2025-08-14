@@ -16,12 +16,12 @@ public class DateTest {
         System.out.println(new Date().getTime());
 
         Date d = new Date();
-        SimpleDateFormat sf= new SimpleDateFormat("YYYY-MM-DD HH:MM:ss");
+        SimpleDateFormat sf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 //        System.out.println(sf.format(d));
 
         // 通过SimpleDateFormat对象parse解析方法，将字符串转换成Date对象
         String str = "2022-02-11";
-        SimpleDateFormat sf1= new SimpleDateFormat("YYYY-MM-DD");
+        SimpleDateFormat sf1= new SimpleDateFormat("yyyy-MM-dd");
         Date strDate = sf1.parse(str);
 //        System.out.println(strDate);
 
@@ -40,7 +40,7 @@ public class DateTest {
         Instant is = Instant.now();// 不区分时区
         System.out.println(is);
 
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("YYY-MM-dd HH:mm");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm");
         ZonedDateTime zdt = ZonedDateTime.now();// 区分时区
         System.out.println(df.format(zdt));
 
