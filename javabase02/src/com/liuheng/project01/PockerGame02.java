@@ -2,6 +2,7 @@ package com.liuheng.project01;
 
 import java.util.*;
 
+// 记录扑克牌存储下标，发牌后，通过TreeSet保证扑克牌顺序
 public class PockerGame02 {
 
     static HashMap<Integer, String> hm = new HashMap<>();
