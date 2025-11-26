@@ -10,6 +10,5 @@ public class Test01 {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
-
     }
 }
