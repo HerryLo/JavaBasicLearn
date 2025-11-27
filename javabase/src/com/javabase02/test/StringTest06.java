@@ -20,7 +20,7 @@ public class StringTest06 {
         sb2.append("567567");
         System.out.println(sb2.toString());
 
-
-
+        System.out.println(new Writer("lh", 12));
     }
 }
+

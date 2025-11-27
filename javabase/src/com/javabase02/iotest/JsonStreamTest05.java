@@ -16,7 +16,7 @@ public class JsonStreamTest05 {
 
         Collections.addAll(list1, p1, p2);
 
-        String jsonOutput = JSON.toJSONString(p1);
+        String jsonOutput = JSON.toJSONString(list1);
         System.out.println(jsonOutput);
     }
 }
